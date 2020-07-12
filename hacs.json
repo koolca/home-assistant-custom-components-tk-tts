@@ -1,5 +1,5 @@
 {
-  "name": "Remote PicoTTS",
+  "name": "tk_tts",
   "render_readme": true,
   "domains": "tts",
   "homeassistant": "0.36",
