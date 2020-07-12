@@ -1,4 +1,4 @@
-# Home Assistant Component for a remote picoTTS installation.
+# Home Assistant Component for a tk_tts installation.
 
 [![hacs_badge](https://img.shields.io/badge/HACS-default-orange.svg)](https://github.com/custom-components/hacs)
 
@@ -12,7 +12,7 @@ Its recommended to run the server via my [Home Assistant Supervisor Addon](https
 Install it in the `Integrations` tab on the [Home Asssistant Community Store](https://github.com/custom-components/hacs).
 
 ## Manual way
-To use it, copy the `picotts_remote` folder inside your `config/custom_components` folder on your home assistant installation first.
+To use it, copy the `tk_tts` folder inside your `config/custom_components` folder on your home assistant installation first.
 
 
 # Configuration
@@ -21,7 +21,7 @@ Add following config to your yaml if you are using the Supervisor Addon
 
 ```yaml
 tts:
-  - platform: picotts_remote
+  - platform: tk_tts
 
 ```
 The integration will connect to picoTTS after an Home Assistant restart.
@@ -32,7 +32,7 @@ For setting your own host and port:
 
 ```yaml
 tts:
-  - platform: picotts_remote
+  - platform: tk_tts
     host: <host>
     port: <port>
 
@@ -40,11 +40,11 @@ tts:
 
 ## Language
 
-The languge can be set to the languages: `en-US`, `en-GB`, `de-DE`, `es-ES`, `fr-FR` and `it-IT` via the `language` key.
+The languge can be set to any language supported by your Android device.
 
 ```yaml
 tts:
-  - platform: picotts_remote
-    language: "de-DE"
+  - platform: tk_tts
+    language: "de"
 
 ```
