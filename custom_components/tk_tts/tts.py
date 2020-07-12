@@ -1,4 +1,4 @@
-"""Support for the Pico TTS speech service."""
+"""Support for the TK-Solution TTS speech service."""
 import logging
 
 import asyncio
