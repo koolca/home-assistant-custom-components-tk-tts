@@ -16,11 +16,11 @@ from urllib.parse import quote
 
 _LOGGER = logging.getLogger(__name__)
 
-SUPPORT_LANGUAGES = ["en-US", "en-GB", "de-DE", "es-ES", "fr-FR", "it-IT"]
+SUPPORT_LANGUAGES = ["en", "de", "es", "fr", "it", "hu"]
 
-DEFAULT_LANG = "en-US"
+DEFAULT_LANG = "hu"
 DEFAULT_HOST = "localhost"
-DEFAULT_PORT = 59126
+DEFAULT_PORT = 8080
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
@@ -32,20 +32,20 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 
 
 def get_engine(hass, config, discovery_info=None):
-    """Set up Pico speech component."""
+    """Set up TK-Solution speech component."""
     return PicoProvider(hass, config[CONF_LANG], config[CONF_HOST], config[CONF_PORT])
 
 
 class PicoProvider(Provider):
-    """The Pico TTS API provider."""
+    """The TK-Solution TTS API provider."""
 
     def __init__(self, hass, lang, host, port):
-        """Initialize Pico TTS provider."""
+        """Initialize TK-Solution TTS provider."""
         self._hass = hass
         self._lang = lang
         self._host = host
         self._port = port
-        self.name = "PicoTTS (Remote)"
+        self.name = "TK-Solution TTS"
 
     @property
     def default_language(self):
@@ -63,11 +63,12 @@ class PicoProvider(Provider):
 
         try:
             with async_timeout.timeout(5):
-                url = "http://{}:{}/speak?".format(self._host, self._port)
+                url = "http://{}:{}/".format(self._host, self._port)
                 encoded_message = quote(message)
                 url_param = {
-                    "lang": language,
                     "text": encoded_message,
+                    "lang": language,
+                    "vol": "10",
                 }
 
                 request = await websession.get(url, params=url_param)
