@@ -1,6 +1,7 @@
 {
   "domain": "tk_tts",
   "name": "TK-Solution TTS (Android)",
+  "version": "v1.00",
   "documentation": "https://www.home-assistant.io/components/picotts_remote",
   "requirements": [],
   "dependencies": [],
