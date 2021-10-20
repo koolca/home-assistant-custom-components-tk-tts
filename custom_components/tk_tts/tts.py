@@ -9,7 +9,7 @@ import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
 from homeassistant.components.tts import CONF_LANG, PLATFORM_SCHEMA, Provider
-from homeassistant.const import CONF_HOST, CONF_PORT
+from homeassistant.const import CONF_HOST, CONF_PORT, CONF_API_KEY
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from urllib.parse import quote
 
@@ -24,8 +24,8 @@ DEFAULT_PORT = 8080
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
-        "vol.Optional(CONF_LANG, default=DEFAULT_LANG): vol.In(SUPPORT_LANGUAGES),
-        vol.Optional(CONF_LANG, default=DEFAULT_LANG): cv.string,
+        vol.Optional(CONF_LANG, default=DEFAULT_LANG): vol.In(SUPPORT_LANGUAGES),
+        vol.Required(CONF_API_KEY): cv.string,
         vol.Optional(CONF_HOST, default=DEFAULT_HOST): cv.string,
         vol.Optional(CONF_PORT, default=DEFAULT_PORT): cv.port
     }
@@ -34,18 +34,19 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 
 def get_engine(hass, config, discovery_info=None):
     """Set up TK-Solution speech component."""
-    return PicoProvider(hass, config[CONF_LANG], config[CONF_HOST], config[CONF_PORT])
+    return PicoProvider(hass, config[CONF_LANG], config[CONF_HOST], config[CONF_PORT], config[CONF_API_KEY])
 
 
 class PicoProvider(Provider):
     """The TK-Solution TTS API provider."""
 
-    def __init__(self, hass, lang, host, port):
+    def __init__(self, hass, lang, host, port, api_key):
         """Initialize TK-Solution TTS provider."""
         self._hass = hass
         self._lang = lang
         self._host = host
         self._port = port
+        self._apikey = api_key
         self.name = "TK-Solution TTS"
 
     @property
@@ -53,10 +54,10 @@ class PicoProvider(Provider):
         """Return the default language."""
         return self._lang
 
-    "@property
-    "def supported_languages(self):
-    "    """Return list of supported languages."""
-    "    return SUPPORT_LANGUAGES
+    @property
+    def supported_languages(self):
+        """Return list of supported languages."""
+        return SUPPORT_LANGUAGES
 
     async def async_get_tts_audio(self, message, language, options=None):
         """Load TTS using a remote pico2wave server."""
@@ -68,8 +69,8 @@ class PicoProvider(Provider):
                 encoded_message = quote(message)
                 url_param = {
                     "text": encoded_message,
-                    "Authorization": language,
-                    "lang": "gb",
+                    "lang": language,
+                    "Authorization": self._apikey,
                 }
 
                 request = await websession.get(url, params=url_param)
