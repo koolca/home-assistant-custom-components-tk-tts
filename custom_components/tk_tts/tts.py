@@ -21,11 +21,13 @@ SUPPORT_LANGUAGES = ["en", "de", "es", "fr", "it", "hu"]
 DEFAULT_LANG = "hu"
 DEFAULT_HOST = "localhost"
 DEFAULT_PORT = 8080
+DEFAULT_API = ""
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
         vol.Optional(CONF_LANG, default=DEFAULT_LANG): vol.In(SUPPORT_LANGUAGES),
         vol.Optional(CONF_HOST, default=DEFAULT_HOST): cv.string,
+        vol.Optional(CONF_API, default=DEFAULT_API): cv.string,
         vol.Optional(CONF_PORT, default=DEFAULT_PORT): cv.port
     }
 )
@@ -33,7 +35,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 
 def get_engine(hass, config, discovery_info=None):
     """Set up TK-Solution speech component."""
-    return PicoProvider(hass, config[CONF_LANG], config[CONF_HOST], config[CONF_PORT])
+    return PicoProvider(hass, config[CONF_LANG], config[CONF_HOST], config[CONF_PORT], config[CONF_API])
 
 
 class PicoProvider(Provider):
