@@ -39,12 +39,13 @@ def get_engine(hass, config, discovery_info=None):
 class PicoProvider(Provider):
     """The TK-Solution TTS API provider."""
 
-    def __init__(self, hass, lang, host, port):
+    def __init__(self, hass, lang, host, port, api):
         """Initialize TK-Solution TTS provider."""
         self._hass = hass
         self._lang = lang
         self._host = host
         self._port = port
+        self._api = api
         self.name = "TK-Solution TTS"
 
     @property
@@ -63,7 +64,7 @@ class PicoProvider(Provider):
 
         try:
             with async_timeout.timeout(5):
-                url = "http://{}:{}/".format(self._host, self._port)
+                url = "http://{}:{}/{}".format(self._host, self._port, self._api)
                 encoded_message = quote(message)
                 url_param = {
                     "text": encoded_message,
@@ -85,5 +86,5 @@ class PicoProvider(Provider):
             return (None, None)
 
         if data:
-            return ("wav", data)
+            return ("mp3", data)
         return (None, None)
