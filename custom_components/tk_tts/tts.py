@@ -66,9 +66,10 @@ class PicoProvider(Provider):
 
         try:
             with async_timeout.timeout(5):
-                url = "http://{}:{}/{}".format(self._host, self._port, self._api)
+                url = "http://{}:{}/speak?".format(self._host, self._port)
                 encoded_message = quote(message)
                 url_param = {
+                    "Authorization": self._api,
                     "text": encoded_message,
                     "lang": language,
                     "vol": "10",
