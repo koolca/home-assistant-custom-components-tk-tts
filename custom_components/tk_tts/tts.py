@@ -21,13 +21,12 @@ SUPPORT_LANGUAGES = ["en", "de", "es", "fr", "it", "hu"]
 DEFAULT_LANG = "hu"
 DEFAULT_HOST = "localhost"
 DEFAULT_PORT = 8080
-DEFAULT_API = ""
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
-        vol.Optional(CONF_LANG, default=DEFAULT_LANG): vol.In(SUPPORT_LANGUAGES),
+        "vol.Optional(CONF_LANG, default=DEFAULT_LANG): vol.In(SUPPORT_LANGUAGES),
+        vol.Optional(CONF_LANG, default=DEFAULT_LANG): cv.string,
         vol.Optional(CONF_HOST, default=DEFAULT_HOST): cv.string,
-        vol.Optional(CONF_API, default=DEFAULT_API): cv.string,
         vol.Optional(CONF_PORT, default=DEFAULT_PORT): cv.port
     }
 )
@@ -35,19 +34,18 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 
 def get_engine(hass, config, discovery_info=None):
     """Set up TK-Solution speech component."""
-    return PicoProvider(hass, config[CONF_LANG], config[CONF_HOST], config[CONF_PORT], config[CONF_API])
+    return PicoProvider(hass, config[CONF_LANG], config[CONF_HOST], config[CONF_PORT])
 
 
 class PicoProvider(Provider):
     """The TK-Solution TTS API provider."""
 
-    def __init__(self, hass, lang, host, port, api):
+    def __init__(self, hass, lang, host, port):
         """Initialize TK-Solution TTS provider."""
         self._hass = hass
         self._lang = lang
         self._host = host
         self._port = port
-        self._api = api
         self.name = "TK-Solution TTS"
 
     @property
@@ -55,10 +53,10 @@ class PicoProvider(Provider):
         """Return the default language."""
         return self._lang
 
-    @property
-    def supported_languages(self):
-        """Return list of supported languages."""
-        return SUPPORT_LANGUAGES
+    "@property
+    "def supported_languages(self):
+    "    """Return list of supported languages."""
+    "    return SUPPORT_LANGUAGES
 
     async def async_get_tts_audio(self, message, language, options=None):
         """Load TTS using a remote pico2wave server."""
@@ -69,10 +67,9 @@ class PicoProvider(Provider):
                 url = "http://{}:{}/speak?".format(self._host, self._port)
                 encoded_message = quote(message)
                 url_param = {
-                    "Authorization": self._api,
                     "text": encoded_message,
-                    "lang": language,
-                    "vol": "10",
+                    "Authorization": language,
+                    "lang": "gb",
                 }
 
                 request = await websession.get(url, params=url_param)
